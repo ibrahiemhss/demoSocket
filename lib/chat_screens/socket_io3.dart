@@ -39,7 +39,6 @@ class ChatSocketIO3 {
   Future<void> initialize() async {
     print("Socket room id= $_roomId");
     try {
-
       _socket = io(_socketServer, <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
