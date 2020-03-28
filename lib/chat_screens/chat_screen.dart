@@ -14,6 +14,8 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:untitled/chat_screens/socket_io.dart';
+import 'package:untitled/chat_screens/socket_io2.dart';
+import 'package:untitled/chat_screens/socket_io3.dart';
 import 'package:untitled/localization/localizations.dart';
 import 'package:untitled/theme/app_theme.dart';
 import 'dart:math' as Math;
@@ -57,7 +59,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   int _lastIndexOfMessages = 0;
 
   /// Chat SocketIO Controller.
-  ChatSocketIO _chatSocket;
+  ChatSocketIO3 _chatSocket;
 
   /// Image File => Used to Store Image before sending it to Socket.
   File _imageFile;
@@ -145,7 +147,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String _error_connection = '';
   Future<void> _initSocket() async {
     try {
-      _chatSocket = ChatSocketIO(
+      _chatSocket = ChatSocketIO3(
         userId: widget.myId,
         otherId: widget.recipient_id,
 
@@ -214,7 +216,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               _isOnline = true;
             });
           } else if (_isOnline && mounted) {
-             _chatSocket.checkLastSeen();
+            // _chatSocket.checkLastSeen();
             setState(() {
               _isOnline = false;
             });

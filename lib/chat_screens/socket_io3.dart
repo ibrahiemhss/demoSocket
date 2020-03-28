@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatSocketIO3 {
-  final String _socketServer = "https://www.hijozaty.com/chat";
+  final String _socketServer = "https://www.hijozaty.com";
   //final String _socketServer = "http://95.216.223.177:3001";
 
   final bool debugging = false;
@@ -44,8 +44,8 @@ class ChatSocketIO3 {
         'transports': ['websocket'],
         'autoConnect': false,
 
-        //"nameSpace": "/chat",
-        'extraHeaders': {'foo': 'bar'} // optional
+        "nameSpace": "/chat",
+        //'extraHeaders': {'foo': 'bar'} // optional
       });
       print("Socket On createInitialization ... $_socketServer");
 

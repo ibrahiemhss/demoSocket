@@ -1,9 +1,11 @@
-import  'package:flutter_socket_io/flutter_socket_io.dart';
+import 'package:better_socket/better_socket.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_socket_io/socket_io_manager.dart';
+
 
 class ChatSocketIO2 {
-  final String _socketServer = "https://www.hijozaty.com";
+  final String _socketServer = "hijozaty.com/chat";
   //final String _socketServer = "http://95.216.223.177:3001";
 
   final bool debugging = false;
@@ -15,11 +17,11 @@ class ChatSocketIO2 {
   final Function onTyping;
   final Function onLastSeen;
   final Function onOnline;
-  SocketIOManager _manager = SocketIOManager();
-
+//  SocketIOManager _manager = SocketIOManager();
+  var _mySocket;
   final Function onError;
   final Function onMsgDeleted;
-  SocketIO _socket;
+  BetterSocket _socket;
   bool _initialized = false;
   String get _roomId => int.parse(userId) > int.parse(otherId)
       ? "${otherId}_$userId"
@@ -39,33 +41,24 @@ class ChatSocketIO2 {
   });
 
 
-  initialize() {
+  initialize() async{
+
+
     try {
-      //update your domain before using
-      _socket = SocketIOManager().createSocketIO(
-          _socketServer, "/chat",
-           query: "userId=$userId",
-          socketStatusCallback: _socketStatus);
+      BetterSocket.connentSocket("ws://$_socketServer", trustAllHost: true);
+      BetterSocket.addListener(onOpen: (httpStatus, httpStatusMessage) {
 
+        print(
+            "onOpen---httpStatus:$httpStatus  httpStatusMessage:$httpStatusMessage");
+      }
+      , onMessage: (message) {
 
-      //call init socket before doing anything
-      _socket.init();
-      _socket.subscribe("subscribe", _subscribe([_roomId, userId]));
-      _socket.subscribe('getAllMessages', _getAllMessages([_roomId, 100, 1]));
-      _socket.subscribe('checkLastSeen', _checkLastSeen([_roomId, otherId]));
-      _socket.subscribe('fetchMessages', _fetchMessages);
-      _socket.subscribe('userLastSeen', _userLastSeen);
-      _socket.subscribe('messageReceived', _messageReceived);
-      _socket.subscribe('typing', _typing);
-      _socket.subscribe('whoIsOnline', _whoIsOnline);
-      _socket.subscribe('messageDeleted', _messageDeleted);
-      _socket.subscribe('error', _error);
-
-
-
-
-      //connct socket
-      _socket.connect();
+        print("onMessage---message:$message");
+      }, onClose: (code, reason, remote) {
+        print("onClose---code:$code  reason:$reason  remote:$remote");
+      }, onError: (message) {
+        print("onError---message:$message");
+      });
       _initialized = true;
     }catch (e){
       print("Socket On Initialization error\n ${e.toString()}...");
@@ -73,13 +66,18 @@ class ChatSocketIO2 {
     }
   }
 
+  void _getConnections(dynamic data){
+    print("Socket status: " + data);
+    Map<String,dynamic> map = new Map<String, dynamic>();
+    map = json.decode(data);
+
+  }
 
   _socketStatus(dynamic data) {
     print("Socket status: " + data);
   }
 
-  _subscribe(dynamic data) {
-    print("subscribe from UFO: " + data);
+  _subscribe(String data) {
   }
   _getAllMessages(dynamic data) {
     print("getAllMessages from UFO: " + data);

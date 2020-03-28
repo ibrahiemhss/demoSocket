@@ -46,22 +46,19 @@ class ChatSocketIO {
           "$_socketServer",
           enableLogging: debugging,
           transports: [Transports.WEB_SOCKET],
-          nameSpace: "/chat",
+         // nameSpace: "/chat",
         ),
       );
-      print("Socket On createInitialization ... $_socketServer");
 
-    }catch (e){
-      print("Socket On Initialization error\n ${e.toString()}...");
+        _socket.onConnect((data) {
+          onConnect();
+          _socket.emit("subscribe", [_roomId, userId]);
+          _socket.emit('getAllMessages', [_roomId, 100, 1]);
+          checkLastSeen();
+        });
 
-    }
-    try {
-      if (_initialized) return;
-
-      _activeListeners();
       _socket.connect();
       _initialized = true;
-      print("Socket  initialized ... ${_socket.isConnected().toString()}");
 
     }catch (e){
       print("Socket On Initialization error\n ${e.toString()}...");
@@ -70,20 +67,7 @@ class ChatSocketIO {
   }
 
   void _activeListeners() {
-   
-    try {
-      _socket.onConnect((data) {
-        print("Socket Connected to $_socketServer...");
-        onConnect();
-        _socket.emit("subscribe", [_roomId, userId]);
-        _socket.emit('getAllMessages', [_roomId, 100, 1]);
 
-        checkLastSeen();
-      });
-    }catch (e){
-      print("Socket onConnect error\n ${e.toString()}...");
-
-    }
 
     try {
       _socket.on("userLastSeen", (data) {
