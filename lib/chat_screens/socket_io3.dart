@@ -2,7 +2,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-class ChatSocketIO {
+class ChatSocketIO3 {
   final String _socketServer = "https://www.hijozaty.com/chat";
   //final String _socketServer = "http://95.216.223.177:3001";
 
@@ -23,7 +23,7 @@ class ChatSocketIO {
       ? "${otherId}_$userId"
       : "${userId}_$otherId";
 
-  ChatSocketIO({
+  ChatSocketIO3({
     @required this.userId,
     @required this.otherId,
     @required this.onMsgReceived,
