@@ -138,26 +138,8 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    /* debugPrint(
-      "\n----------------\n"
-          "FileName: lib/ui/chat_screens/chat_screen.dart\n"
-          "MethodName : initState\n"
-          "Values:\n"
-          "isSendFromDoctor: ${widget.isSendFromDoctor},\n"
-          "myId: ${widget.myId},\n"
-          "senderId: ${widget.recipient_id},\n"
-          "myName: ${widget.myName},\n"
-          "otherName: ${widget.otherName},\n"
-          "appointmentId: ${widget.appointmentId}\n"
-          "----------------\n",
-      wrapWidth: 1024,
-    );*/
+    _initSocket();
     super.initState();
-    /*   timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
-      print('excuting time =${i++}');
-    });*/
-
-
   }
   /// initializes Socket Controller and Connects to Server.
   String _error_connection = '';
