@@ -1,11 +1,13 @@
-import 'package:better_socket/better_socket.dart';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
+import 'package:tazz_socket/tazz_socket.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:tazz_socket/tazz_socket.dart';
 
 class ChatSocketIO2 {
-  final String _socketServer = "hijozaty.com/chat";
+  final String _socketServer = "https://www.hijozaty.com";
   //final String _socketServer = "http://95.216.223.177:3001";
 
   final bool debugging = false;
@@ -17,11 +19,12 @@ class ChatSocketIO2 {
   final Function onTyping;
   final Function onLastSeen;
   final Function onOnline;
+  TazzSocket myIO = new TazzSocket();
+
 //  SocketIOManager _manager = SocketIOManager();
   var _mySocket;
   final Function onError;
   final Function onMsgDeleted;
-  BetterSocket _socket;
   bool _initialized = false;
   String get _roomId => int.parse(userId) > int.parse(otherId)
       ? "${otherId}_$userId"
@@ -45,21 +48,15 @@ class ChatSocketIO2 {
 
 
     try {
-      BetterSocket.connentSocket("ws://$_socketServer", trustAllHost: true);
-      BetterSocket.addListener(onOpen: (httpStatus, httpStatusMessage) {
-
-        print(
-            "onOpen---httpStatus:$httpStatus  httpStatusMessage:$httpStatusMessage");
-      }
-      , onMessage: (message) {
-
-        print("onMessage---message:$message");
-      }, onClose: (code, reason, remote) {
-        print("onClose---code:$code  reason:$reason  remote:$remote");
-      }, onError: (message) {
-        print("onError---message:$message");
+      myIO.socket(_socketServer, '/chat', 'websocket', true, true, true);
+      myIO.connect();
+      myIO.emit("subscribe", _roomId);
+      myIO.emit('getAllMessages', _roomId);
+      myIO.on("fetchMessages", (data) {
+        if (debugging) debugPrint("onFetchMessages ${data['oldMessages']}", wrapWidth: 1024);
+       onFetchMessages(data['oldMessages']);
       });
-      _initialized = true;
+
     }catch (e){
       print("Socket On Initialization error\n ${e.toString()}...");
 
